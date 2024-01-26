@@ -1,64 +1,77 @@
-import styles from './style.module.css';
-
-type ModalProps = {
-	children: React.ReactNode;
-	title: string;
-	isOpen: boolean;
-	onClose?: (type: 'click' | 'esc', target: EventTarget) => void;
-	onConfirm?: () => void;
-	footer?: {
-		hidden?: boolean;
-		confirmText?: string;
-		cancelText?: string;
-	};
-};
-
+import { useEffect, useRef } from "react";
+import { ModalProps } from "./interface";
+import styles from "./style.module.css";
 /* 
 	Modal
 
 	- Ao clicar no wrapper do modal, o modal deve ser fechado, porém esta ação deve ser ignorada caso o usuário clique em qualquer elemento dentro do modal
 */
 
-export const Modal: React.FC<ModalProps> = ({ children, title, isOpen, ...props }) => {
-	function handleCloseClick(e: React.MouseEvent) {
-		props.onClose?.('click', e.target);
-	}
+export const Modal: React.FC<ModalProps> = ({
+  children,
+  title,
+  isOpen,
+  ...props
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
 
-	function handleConfirmClick(e: React.MouseEvent) {
-		props.onConfirm?.();
-	}
+  function handleCloseClick(e: React.MouseEvent) {
+    props.onClose?.("click", e.target);
+  }
 
-	function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-		if (e.key === 'Escape') props.onClose?.('esc', e.target);
-	}
+  function handleConfirmClick(e: React.MouseEvent) {
+    props.onConfirm?.();
+  }
 
-	if (!isOpen) return null;
+  function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (e.key === "Escape") props.onClose?.("esc", e.target);
+  }
 
-	return (
-		<div data-modal-wrapper className={styles.wrapper} onClick={handleCloseClick} onKeyDown={handleKeyDown}>
-			<div data-modal-container>
-				<header data-modal-header>
-					<h2>{title}</h2>
+  // Side effect para acionar o evento de keypress no wrapper do modal
+  useEffect(() => {
+    if (isOpen) {
+      ref.current?.focus();
+    }
+  }, [isOpen]);
 
-					<button data-modal-close onClick={handleCloseClick}>
-						X
-					</button>
-				</header>
+  return isOpen ? (
+    <div
+      data-modal-wrapper
+      className={styles.wrapper}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      ref={ref}
+    >
+      <div data-modal-container>
+        <header data-modal-header>
+          <h2>{title}</h2>
 
-				{children}
+          <button data-modal-close onClick={handleCloseClick} type="button">
+            X
+          </button>
+        </header>
 
-				{!props.footer?.hidden && (
-					<div data-modal-footer>
-						<button data-modal-cancel onClick={handleCloseClick}>
-							{props.footer?.cancelText ?? 'Cancelar'}
-						</button>
+        {children}
 
-						<button data-modal-confirm onClick={handleConfirmClick} data-type="confirm">
-							{props.footer?.confirmText ?? 'Confirmar'}
-						</button>
-					</div>
-				)}
-			</div>
-		</div>
-	);
+        {!props.footer?.hidden && (
+          <div data-modal-footer>
+            <button data-modal-cancel onClick={handleCloseClick} type="button">
+              {props.footer?.cancelText ?? "Cancelar"}
+            </button>
+
+            <button
+              data-modal-confirm
+              onClick={handleConfirmClick}
+              data-type="confirm"
+              type="button"
+            >
+              {props.footer?.confirmText ?? "Confirmar"}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  ) : (
+    <></>
+  );
 };
