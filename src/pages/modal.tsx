@@ -13,8 +13,10 @@ export default function ModalPage() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   function handleModalConfirm() {
+    if (window) {
+      window.alert("confirmado");
+    }
     setModalIsOpen(false);
-    alert("confirmado");
   }
 
   function handleModalClose() {

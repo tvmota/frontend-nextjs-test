@@ -18,7 +18,9 @@ export default function Home() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleModalConfirm = () => {
-    alert("Confirmado");
+    if (window) {
+      window.alert("Confirmado");
+    }
     setModalIsOpen(false);
   };
 

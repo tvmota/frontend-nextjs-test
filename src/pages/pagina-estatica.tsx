@@ -20,7 +20,7 @@ export const getStaticProps = (async (context) => {
     },
   ];
   try {
-    const response = await fetch(`${process.env.URL}/api/cities/10`);
+    const response = await fetch(`${process.env.BASE_URL}/api/cities/10`);
     cities = await response.json();
   } catch (err) {
     console.error("There was a problem fetching the data:", err);
@@ -29,7 +29,7 @@ export const getStaticProps = (async (context) => {
       props: {
         list: cities,
       },
-      revalidate: 10,
+      revalidate: 60,
     };
   }
 }) satisfies GetStaticProps<{
