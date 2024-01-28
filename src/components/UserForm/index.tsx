@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { userSchema, TUserSchema } from "@/types/user.d";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/hooks/useToast";
 
 import styles from "./style.module.css";
 
@@ -13,6 +14,7 @@ export const UserForm: React.FC = () => {
   } = useForm<TUserSchema>({
     resolver: zodResolver(userSchema),
   });
+  const toast = useToast();
 
   const handleUserSubmit = async (frmData: TUserSchema) => {
     try {
@@ -24,10 +26,11 @@ export const UserForm: React.FC = () => {
       const result = await userRequest.json();
       const { message = "Aconteceu um erro, tente novamente" } = result;
 
-      alert(message);
-
       if (userRequest.ok) {
         reset();
+        toast.success(message, 5000);
+      } else {
+        toast.error(message, 5000);
       }
     } catch (err) {
       console.error(err);

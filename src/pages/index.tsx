@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "@/styles/home.module.css";
 
 export default function Home() {
@@ -5,31 +6,31 @@ export default function Home() {
     <div className={styles.container}>
       <ul>
         <li>
-          <a href="/modal">Modal</a>
+          <Link href="/modal">Modal</Link>
         </li>
 
         <li>
-          <a href="/modal-de-confirmacao">Modal de confirmação</a>
+          <Link href="/modal-de-confirmacao">Modal de confirmação</Link>
         </li>
 
         <li>
-          <a href="/lista">Lista</a>
+          <Link href="/lista">Lista</Link>
         </li>
 
         <li>
-          <a href="/formulario">Formulário</a>
+          <Link href="/formulario">Formulário</Link>
         </li>
 
         <li>
-          <a href="/context-api">Context API</a>
+          <Link href="/context-api">Context API</Link>
         </li>
 
         <li>
-          <a href="/pagina-estatica">Pagina estática</a>
+          <Link href="/pagina-estatica">Pagina estática</Link>
         </li>
 
         <li>
-          <a href="/ciclo-de-vida">Ciclo de vida de componente</a>
+          <Link href="/ciclo-de-vida">Ciclo de vida de componente</Link>
         </li>
       </ul>
     </div>
