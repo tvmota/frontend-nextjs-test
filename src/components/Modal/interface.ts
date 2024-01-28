@@ -4,6 +4,7 @@ export interface ModalProps {
   isOpen: boolean;
   onClose?: (type: "click" | "esc", target: EventTarget) => void;
   onConfirm?: () => void;
+  persistent?: boolean;
   footer?: {
     hidden?: boolean;
     confirmText?: string;

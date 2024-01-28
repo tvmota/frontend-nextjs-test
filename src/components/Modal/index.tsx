@@ -11,12 +11,24 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   title,
   isOpen,
+  persistent = false,
   ...props
 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   function handleCloseClick(e: React.MouseEvent) {
-    props.onClose?.("click", e.target);
+    const parsed: HTMLElement = e.target as HTMLElement;
+    const attrClose = [
+      !persistent ? "modalWrapper" : "",
+      "modalCancel",
+      "modalConfirm",
+      "modalClose",
+    ];
+    const canClose = attrClose.some((val) => parsed.dataset[val]);
+
+    if (canClose) {
+      props.onClose?.("click", e.target);
+    }
   }
 
   function handleConfirmClick(e: React.MouseEvent) {
@@ -24,7 +36,9 @@ export const Modal: React.FC<ModalProps> = ({
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === "Escape") props.onClose?.("esc", e.target);
+    if (!persistent) {
+      if (e.key === "Escape") props.onClose?.("esc", e.target);
+    }
   }
 
   // Side effect para acionar o evento de keypress no wrapper do modal
@@ -39,6 +53,7 @@ export const Modal: React.FC<ModalProps> = ({
       data-modal-wrapper
       className={styles.wrapper}
       onKeyDown={handleKeyDown}
+      onClick={handleCloseClick}
       tabIndex={0}
       ref={ref}
     >
@@ -46,9 +61,13 @@ export const Modal: React.FC<ModalProps> = ({
         <header data-modal-header>
           <h2>{title}</h2>
 
-          <button data-modal-close onClick={handleCloseClick} type="button">
-            X
-          </button>
+          {!persistent ? (
+            <button data-modal-close onClick={handleCloseClick} type="button">
+              X
+            </button>
+          ) : (
+            <></>
+          )}
         </header>
 
         {children}

@@ -48,6 +48,7 @@ export default function Home() {
         onClose={() => setModalIsOpen(false)}
         onConfirm={handleModalConfirm}
         footer={{ hidden: false }}
+        persistent={true}
       >
         {renderModalConfirmContent()}
       </Modal>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 type CounterProps = {
   initialCount: number;
@@ -6,6 +6,7 @@ type CounterProps = {
 
 export const Counter: React.FC<CounterProps> = ({ initialCount }) => {
   const [count, setCount] = useState(initialCount);
+  const isFirstRender = useRef(true);
   const onCounterUnmount = new CustomEvent("onCounterUnmount");
   const onCounterMount = new CustomEvent("onCounterMount");
 
@@ -18,15 +19,17 @@ export const Counter: React.FC<CounterProps> = ({ initialCount }) => {
   }, []);
 
   useEffect(() => {
-    if (count > 0) {
-      window.dispatchEvent(
-        new CustomEvent("onCounterUpdate", {
-          detail: {
-            count,
-          },
-        })
-      );
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
     }
+    window.dispatchEvent(
+      new CustomEvent("onCounterUpdate", {
+        detail: {
+          count,
+        },
+      })
+    );
   }, [count]);
 
   const handleIncrement = () => {
